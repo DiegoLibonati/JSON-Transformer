@@ -2,6 +2,8 @@ import { Json } from "@/src/entities/entities.d";
 
 export type JSONState = {
   json: Json;
+  uploading: boolean;
+  uploaded: boolean;
 };
 
 export type JSONAction =
@@ -19,5 +21,13 @@ export type JSONAction =
     }
   | {
       type: "JSON_CLEAR";
+      payload: null;
+    }
+  | {
+      type: "JSON_UPLOADING";
+      payload: { uploading: boolean };
+    }
+  | {
+      type: "JSON_UPLOADED";
       payload: null;
     };

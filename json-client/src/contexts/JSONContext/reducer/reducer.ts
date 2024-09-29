@@ -6,6 +6,8 @@ export const initialState: JSONState = {
     file: null,
     content: "",
   },
+  uploading: false,
+  uploaded: false,
 };
 
 export function reducer(state: JSONState, action: JSONAction): JSONState {
@@ -43,6 +45,16 @@ export function reducer(state: JSONState, action: JSONAction): JSONState {
           file: null,
           content: "",
         },
+      };
+    case "JSON_UPLOADING":
+      return {
+        ...state,
+        uploading: action.payload.uploading,
+      };
+    case "JSON_UPLOADED":
+      return {
+        ...state,
+        uploaded: true,
       };
     default:
       return state;

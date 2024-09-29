@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { ButtonSubmit } from "@/src/components/Buttons/export";
 import { InputField, InputFile } from "@/src/components/Inputs/export";
 
-import { JSONContext } from "@/src/contexts/export";
+import { JSONContext, ModalContext } from "@/src/contexts/export";
 import { useForm } from "@/src/hooks/export";
 import { postGetFileContent, postUploadJson } from "@/src/services/export";
 
@@ -13,9 +13,16 @@ type FormUploadJsonState = {
 };
 
 export const FormUploadJson = (): JSX.Element => {
-  const { json, handleJsonContentUpdate } = useContext(JSONContext);
+  const {
+    json,
+    handleJsonContentUpdate,
+    handleJsonUploading,
+    handleJsonUploaded,
+    handleUpdateJson,
+  } = useContext(JSONContext);
+  const { handleSetModal } = useContext(ModalContext);
 
-  const { formState, onInputChange, onInputFileChange } =
+  const { formState, onInputChange, onInputFileChange, onResetForm } =
     useForm<FormUploadJsonState>({
       initialValueForm: {
         jsonName: "",
@@ -23,22 +30,42 @@ export const FormUploadJson = (): JSX.Element => {
       },
     });
 
+  // TODO: ERROR DE BACKS MOSTRAR MODAL
   const onSubmitForm: React.FormEventHandler<HTMLFormElement> = async (
     e
   ): Promise<void> => {
-    e.preventDefault();
-    console.log("Submit Form");
+    try {
+      e.preventDefault();
+      handleJsonUploading(true);
+      console.log("Submit Form");
 
-    const formData = new FormData();
+      const formData = new FormData();
 
-    formData.append("name", formState.jsonName);
-    formData.append("file", formState.jsonFile);
-    formData.append("content", json.content);
+      const name = formState.jsonName.trim();
+      const file = formState.jsonFile;
+      const content = json.content;
 
-    const response = await postUploadJson(formData);
+      if (!name || !file || !content) {
+        onResetForm();
+        return handleSetModal({
+          message: "You must send a valid name, content and file.",
+          open: true,
+        });
+      }
 
-    console.log(response);
-    return;
+      formData.append("name", name);
+      formData.append("file", file);
+      formData.append("content", content);
+
+      await postUploadJson(formData);
+
+      handleUpdateJson({ name: name, file: file, content: content });
+      handleJsonUploading(false);
+      return handleJsonUploaded();
+    } catch (e) {
+      handleSetModal({ message: e.response.data.message, open: true });
+      handleJsonUploading(false);
+    }
   };
 
   const updateFile = async (): Promise<void> => {
@@ -61,7 +88,7 @@ export const FormUploadJson = (): JSX.Element => {
 
   return (
     <form
-      className="flex flex-col gap-2 w-full h-auto mb-2"
+      className="flex flex-col self-start gap-2 w-full h-auto mb-2 lg:w-[90%]"
       onSubmit={onSubmitForm}
     >
       <InputField

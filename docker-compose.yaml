@@ -29,6 +29,20 @@ services:
     networks:
       - net-json-transformer
 
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: jsondb
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - net-json-transformer
+
 networks:
   net-json-transformer:
     name: net-json-transformer

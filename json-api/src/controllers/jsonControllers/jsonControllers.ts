@@ -1,4 +1,8 @@
 import { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
+import { getError } from "@/src/helpers/getError";
+
+const prisma = new PrismaClient();
 
 export const jsonControllers = {
   getFileContent: async (req: Request, res: Response) => {
@@ -11,14 +15,27 @@ export const jsonControllers = {
     });
   },
   uploadJson: async (req: Request, res: Response) => {
-    const file = req.file;
-    const body: { name: string; content: string } = req.body;
+    try {
+      // const file = req.file;
+      const body: { name: string; content: string } = req.body;
 
-    console.log("Llego el BODY: ", body);
-    console.log("Llego el File: ", file);
+      const json = await prisma.jsonModel.create({
+        data: {
+          name: body.name,
+          content: body.content,
+        },
+      });
 
-    res.status(201).json({
-      message: "¡JSON Uploaded!",
-    });
+      res.status(201).json({
+        message: "¡JSON Uploaded!",
+        data: {
+          json: json,
+        },
+      });
+    } catch (e: unknown) {
+      res.status(400).json({
+        message: getError(e),
+      });
+    }
   },
 };

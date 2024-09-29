@@ -4,3 +4,4 @@ api.env
 client.env
 .env
 yarn.lock
+data

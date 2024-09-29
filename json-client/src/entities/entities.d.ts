@@ -13,3 +13,8 @@ export type Json = {
   file: File;
   content: string;
 };
+
+export type Modal = {
+  message: string;
+  open: boolean;
+};
