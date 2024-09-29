@@ -19,6 +19,15 @@ export const jsonControllers = {
       // const file = req.file;
       const body: { name: string; content: string } = req.body;
 
+      const name = body.name.trim();
+      const content = body.content;
+
+      if (!name || !content) {
+        res.status(400).json({
+          message: "You must send a valid name and content!",
+        });
+      }
+
       const json = await prisma.jsonModel.create({
         data: {
           name: body.name,
