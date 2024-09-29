@@ -1,0 +1,31 @@
+{
+  "name": "json-transformer-api",
+  "productName": "JSON-Transformer-Api",
+  "version": "0.0.1",
+  "description": "Json Transformer allows you to create a new json from an existing one.",
+  "author": {
+    "name": "Diego Libonati",
+    "email": "diego.libonati1998@gmail.com"
+  },
+  "main": "./src/index.ts",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "npx tsc && node dist/index.js",
+    "dev": "nodemon -L",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/multer": "^1.4.12",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "multer": "^1.4.5-lts.1"
+  }
+}
