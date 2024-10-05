@@ -183,3 +183,7 @@ DATABASE_URL=postgresql://root:admin@db:5432/jsondb?schema=public
   contentJsonToTransform: string;
 }
 ```
+
+### **PENDING TASKS - to develop if you want to help:**
+
+1. To be able to customize the values of an array of elements of a json input
