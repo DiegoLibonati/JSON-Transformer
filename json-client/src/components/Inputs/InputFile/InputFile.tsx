@@ -13,6 +13,7 @@ interface InputFileProps extends GeneralProps {
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   accept?: string;
+  spanClassName?: string;
 }
 
 export const InputFile = ({
@@ -24,6 +25,7 @@ export const InputFile = ({
   emptyLabel,
   className,
   accept,
+  spanClassName,
   onChange,
 }: InputFileProps): JSX.Element => {
   return (
@@ -45,7 +47,9 @@ export const InputFile = ({
           >
             {buttonLabel}
           </button>
-          <span className="flex items-center w-[70%] h-full bg-secondary px-2 text-white text-sm rounded-tr-lg rounded-br-lg">
+          <span
+            className={`flex items-center w-[70%] h-full bg-secondary px-2 text-white text-sm rounded-tr-lg rounded-br-lg ${spanClassName}`}
+          >
             {value ? value : emptyLabel}
           </span>
         </div>

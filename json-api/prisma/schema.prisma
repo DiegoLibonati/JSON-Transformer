@@ -14,8 +14,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model JsonModel {
+model InputJson {
   id Int @id @default(autoincrement())
   name String @unique
   content String
+  keys String[]
+  keysAndValues Json @default("{}")
+}
+
+model OutputJson {
+  id Int @id @default(autoincrement())
+  name String @unique
+  model String
 }

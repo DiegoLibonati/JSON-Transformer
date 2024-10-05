@@ -1,7 +1,7 @@
 import React from "react";
 
 import { editor } from "monaco-editor";
-import { Editor, OnChange } from "@monaco-editor/react";
+import { Editor, OnChange, OnMount } from "@monaco-editor/react";
 
 import { GeneralProps } from "@/src/entities/entities.d";
 
@@ -11,6 +11,7 @@ interface MonacoEditorProps extends GeneralProps {
   value: string;
   theme: "vs-dark";
   onChange: OnChange;
+  onMount?: OnMount;
   height?: string;
   options?: editor.IStandaloneEditorConstructionOptions;
 }
@@ -24,6 +25,7 @@ export const MonacoEditor = ({
   value,
   className,
   onChange,
+  onMount,
 }: MonacoEditorProps): JSX.Element => {
   return (
     <div className={`rounded-lg overflow-hidden ${className}`}>
@@ -35,6 +37,7 @@ export const MonacoEditor = ({
         theme={theme}
         options={options}
         onChange={onChange}
+        onMount={onMount}
       />
     </div>
   );

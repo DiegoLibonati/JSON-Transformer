@@ -1,1 +1,1 @@
-export * from "@/src/controllers/jsonControllers/JsonControllers";
+export * from "@/src/controllers/jsonControllers/jsonControllers";

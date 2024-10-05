@@ -8,6 +8,7 @@ type UseForm<T> = {
   formState: T;
   onInputChange: React.ChangeEventHandler<HTMLInputElement>;
   onInputFileChange: React.ChangeEventHandler<HTMLInputElement>;
+  onCheckboxChange: React.ChangeEventHandler<HTMLInputElement>;
   onSelectChange: React.ChangeEventHandler<HTMLSelectElement>;
   onMultiSelectChange: (
     e: ChangeEvent<HTMLSelectElement>,
@@ -39,6 +40,14 @@ export const useForm = <T extends object>({
       throw "The requested file was not uploaded successfully.";
 
     return setFormState({ ...formState, [inputName]: inputFile[0] });
+  };
+
+  const onCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const target = e.target as HTMLInputElement;
+    const inputName = target.name;
+    const inputChecked = target.checked;
+
+    return setFormState({ ...formState, [inputName]: inputChecked });
   };
 
   const onSelectChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
@@ -99,6 +108,7 @@ export const useForm = <T extends object>({
   return {
     formState: formState,
     onInputChange: onInputChange,
+    onCheckboxChange: onCheckboxChange,
     onInputFileChange: onInputFileChange,
     onSelectChange: onSelectChange,
     onMultiSelectChange: onMultiSelectChange,

@@ -1,33 +1,70 @@
-import { Json } from "@/src/entities/entities.d";
+import { InputJson, OutputJson } from "@/src/entities/entities.d";
 
 export type JSONState = {
-  json: Json;
-  uploading: boolean;
-  uploaded: boolean;
+  inputJson: InputJson;
+  outputJson: OutputJson;
+  jsons: {
+    inputJsons: InputJson[];
+    outputJsons: OutputJson[];
+  };
+  loading: boolean;
 };
 
 export type JSONAction =
   | {
-      type: "JSON_UPDATE";
-      payload: { name: string; file: File; content: string };
+      type: "INPUT_JSON_UPDATE";
+      payload: Partial<{
+        id: string;
+        name: string;
+        file: File;
+        content: string;
+        keys: string[];
+      }>;
     }
   | {
-      type: "JSON_FILE_UPDATE";
+      type: "INPUT_JSON_FILE_UPDATE";
       payload: { file: File };
     }
   | {
-      type: "JSON_CONTENT_UPDATE";
+      type: "INPUT_JSON_CONTENT_UPDATE";
       payload: { content: string };
     }
   | {
-      type: "JSON_CLEAR";
+      type: "CONTEXT_CLEAR";
       payload: null;
     }
   | {
-      type: "JSON_UPLOADING";
-      payload: { uploading: boolean };
+      type: "INPUT_JSONS";
+      payload: {
+        inputJsons: InputJson[];
+      };
     }
   | {
-      type: "JSON_UPLOADED";
-      payload: null;
+      type: "OUTPUT_JSONS";
+      payload: {
+        outputJsons: OutputJson[];
+      };
+    }
+  | {
+      type: "OUTPUT_AND_INPUT_JSONS";
+      payload: {
+        inputJsons: InputJson[];
+        outputJsons: OutputJson[];
+      };
+    }
+  | {
+      type: "OUTPUT_JSON_UPDATE";
+      payload: Partial<{
+        id: string;
+        name: string;
+        model: string;
+      }>;
+    }
+  | {
+      type: "OUTPUT_JSON_MODEL_UPDATE";
+      payload: { model: string };
+    }
+  | {
+      type: "LOADING";
+      payload: { loading: boolean };
     };

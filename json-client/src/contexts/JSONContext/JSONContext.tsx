@@ -1,6 +1,6 @@
-import React, { Reducer, createContext, useReducer } from "react";
+import React, { Reducer, createContext, useEffect, useReducer } from "react";
 
-import { Json } from "@/src/entities/entities";
+import { InputJson, OutputJson } from "@/src/entities/entities";
 import { JSONAction, JSONState } from "@/src/entities/json-context.d";
 
 import {
@@ -9,15 +9,23 @@ import {
 } from "@/src/contexts/JSONContext/reducer/reducer";
 
 interface JSONContextProps {
-  json: Json;
-  uploading: boolean;
-  uploaded: boolean;
-  handleUpdateJson: (json: Json) => void;
-  handleJsonContentUpdate: (content: string) => void;
-  handleJsonFileUpdate: (file: File) => void;
+  inputJson: InputJson;
+  outputJson: OutputJson;
+  jsons: {
+    inputJsons: InputJson[];
+    outputJsons: OutputJson[];
+  };
+  loading: boolean;
+  handleUpdateInputJson: (inputJson: InputJson) => void;
+  handleInputJsonContentUpdate: (inputContent: string) => void;
+  handleInputJsonFileUpdate: (inputFile: File) => void;
+  handleInputJsons: (inputJsons: InputJson[]) => void;
+  handleOutputJsons: (outputJsons: OutputJson[]) => void;
+  handleFillJsons: (inputJsons: InputJson[], outputJsons: OutputJson[]) => void;
+  handleUpdateOutputJson: (outputJson: OutputJson) => void;
+  handleOutputJsonModelUpdate: (outputContent: string) => void;
+  handleLoading: (loading: boolean) => void;
   handleClearJson: () => void;
-  handleJsonUploading: (uploading: boolean) => void;
-  handleJsonUploaded: () => void;
 }
 
 interface JSONProviderProps {
@@ -36,62 +44,114 @@ export const JSONProvider: React.FunctionComponent<JSONProviderProps> = ({
     initialState
   );
 
-  const handleUpdateJson = (json: Json): void => {
+  const handleUpdateInputJson = (inputJson: InputJson): void => {
     return dispatch({
-      type: "JSON_UPDATE",
-      payload: { name: json.name, file: json.file, content: json.content },
+      type: "INPUT_JSON_UPDATE",
+      payload: {
+        id: inputJson.id,
+        name: inputJson.name,
+        file: inputJson.file,
+        content: inputJson.content,
+        keys: inputJson.keys,
+      },
     });
   };
 
-  const handleJsonContentUpdate = (content: string): void => {
+  const handleInputJsonContentUpdate = (inputContent: string): void => {
     return dispatch({
-      type: "JSON_CONTENT_UPDATE",
-      payload: { content: content },
+      type: "INPUT_JSON_CONTENT_UPDATE",
+      payload: { content: inputContent },
     });
   };
 
-  const handleJsonFileUpdate = (file: File): void => {
+  const handleInputJsonFileUpdate = (inputFile: File): void => {
     return dispatch({
-      type: "JSON_FILE_UPDATE",
-      payload: { file: file },
+      type: "INPUT_JSON_FILE_UPDATE",
+      payload: { file: inputFile },
     });
   };
 
   const handleClearJson = (): void => {
     return dispatch({
-      type: "JSON_CLEAR",
+      type: "CONTEXT_CLEAR",
       payload: null,
     });
   };
 
-  const handleJsonUploading = (uploading: boolean): void => {
+  const handleInputJsons = (inputJsons: InputJson[]): void => {
     return dispatch({
-      type: "JSON_UPLOADING",
+      type: "INPUT_JSONS",
+      payload: { inputJsons: inputJsons },
+    });
+  };
+
+  const handleOutputJsons = (outputJsons: OutputJson[]): void => {
+    return dispatch({
+      type: "OUTPUT_JSONS",
+      payload: { outputJsons: outputJsons },
+    });
+  };
+
+  const handleFillJsons = (
+    inputJsons: InputJson[],
+    outputJsons: OutputJson[]
+  ): void => {
+    return dispatch({
+      type: "OUTPUT_AND_INPUT_JSONS",
+      payload: { inputJsons: inputJsons, outputJsons: outputJsons },
+    });
+  };
+
+  const handleUpdateOutputJson = (outputJson: OutputJson): void => {
+    return dispatch({
+      type: "OUTPUT_JSON_UPDATE",
       payload: {
-        uploading: uploading,
+        id: outputJson.id,
+        name: outputJson.name,
+        model: outputJson.model,
       },
     });
   };
 
-  const handleJsonUploaded = (): void => {
+  const handleOutputJsonModelUpdate = (outputContent: string): void => {
     return dispatch({
-      type: "JSON_UPLOADED",
-      payload: null,
+      type: "OUTPUT_JSON_MODEL_UPDATE",
+      payload: { model: outputContent },
     });
   };
+
+  const handleLoading = (loading: boolean): void => {
+    return dispatch({
+      type: "LOADING",
+      payload: { loading: loading },
+    });
+  };
+
+  useEffect(() => {
+    if (state.loading) {
+      document.body.style.overflow = "hidden";
+      return;
+    }
+    document.body.style.overflow = "auto";
+  }, [state.loading]);
 
   return (
     <JSONContext.Provider
       value={{
-        json: state.json,
-        uploading: state.uploading,
-        uploaded: state.uploaded,
-        handleUpdateJson: handleUpdateJson,
-        handleJsonFileUpdate: handleJsonFileUpdate,
-        handleJsonContentUpdate: handleJsonContentUpdate,
+        inputJson: state.inputJson,
+        outputJson: state.outputJson,
+        jsons: state.jsons,
+        loading: state.loading,
+        handleUpdateInputJson: handleUpdateInputJson,
+        handleInputJsonFileUpdate: handleInputJsonFileUpdate,
+        handleInputJsonContentUpdate: handleInputJsonContentUpdate,
+        handleInputJsons: handleInputJsons,
+        handleOutputJsons: handleOutputJsons,
+        handleFillJsons: handleFillJsons,
+        handleUpdateOutputJson: handleUpdateOutputJson,
+        handleOutputJsonModelUpdate: handleOutputJsonModelUpdate,
+        handleLoading: handleLoading,
         handleClearJson: handleClearJson,
-        handleJsonUploading: handleJsonUploading,
-        handleJsonUploaded: handleJsonUploaded,
       }}
     >
       {children}

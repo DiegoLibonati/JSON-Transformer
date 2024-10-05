@@ -1,4 +1,4 @@
-import React, { Reducer, createContext, useReducer } from "react";
+import React, { Reducer, createContext, useEffect, useReducer } from "react";
 
 import { Modal } from "@/src/entities/entities";
 import { ModalAction, ModalState } from "@/src/entities/modal-context.d";
@@ -43,6 +43,14 @@ export const ModalProvider: React.FunctionComponent<ModalProviderProps> = ({
       payload: { message: "", open: false },
     });
   };
+
+  useEffect(() => {
+    if (state.modal.open) {
+      document.body.style.overflow = "hidden";
+      return;
+    }
+    document.body.style.overflow = "auto";
+  }, [state.modal.open]);
 
   return (
     <ModalContext.Provider
